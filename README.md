@@ -1,69 +1,128 @@
-# SiriBridge 🚀
+# SiriBridge 🚀：把你的 Siri “换脑”成真正的 Jarvis
 
-[English](#english) | [中文](#chinese)
+[English](#english) | [中文说明](#chinese)
 
 ---
 
 <a name="english"></a>
 ## English
 
-**SiriBridge** is a lightweight REST bridge specifically designed for [OpenClaw](https://github.com/openclaw/openclaw). It enables your iPhone Siri to talk directly with your private AI assistant (Jarvis) using native voice interactions.
+**SiriBridge** is a high-performance, lightweight REST bridge designed to connect Apple Siri with [OpenClaw](https://github.com/openclaw/openclaw). It bypasses the limitations of native Siri by routing voice inputs to your private AI agents (powered by Claude 4.5, DeepSeek, etc.) and reading back the intelligent responses natively on your iPhone.
 
-> "Hey Siri, ask Jarvis: What's the latest tech news for today?"
+### 🧠 Why SiriBridge?
+Native Siri is often limited to simple tasks or web searches. SiriBridge gives it a "brain transplant":
+- **Complex Reasoning**: Ask complicated logic or coding questions.
+- **Private Knowledge**: Connect to your own local data via OpenClaw.
+- **Extreme Speed**: Millisecond-level processing and response.
+- **Privacy First**: Your data stays in your control.
 
-### ✨ Key Features
-- **Native Voice Interaction**: No app needed, just use Siri.
-- **Ultra-Lightweight**: Docker-ready, supports amd64/arm64 (Mac/Linux/Raspberry Pi).
-- **Secure**: Supports `X-Bridge-Secret` header authentication to protect your token.
-- **Smart Truncation**: Built-in reply length limit to keep Siri's responses concise.
-- **Health Check**: `/health` endpoint included for easy gateway connectivity testing.
+### 🛠 System Architecture
+1. **Frontend**: iOS Shortcuts handles "Speech-to-Text" and "Text-to-Speech".
+2. **Bridge**: SiriBridge (FastAPI) converts Shortcut JSON payloads into OpenClaw compatible API calls.
+3. **Backend**: OpenClaw Gateway manages model routing and agent logic.
 
-### 🛠 Quick Start (Docker)
-Run the following command (replace with your own token and secret):
+### 🚀 1. Quick Start (Docker)
+The easiest way to deploy is using our multi-arch Docker image (supports amd64/arm64):
+
 ```bash
 docker run -d \
   --name siribridge \
   -p 18888:18888 \
+  --restart always \
   -e SIRIBRIDGE_GATEWAY_TOKEN="YOUR_OPENCLAW_TOKEN" \
-  -e SIRIBRIDGE_SECRET="YOUR_CUSTOM_SECRET" \
   -e GATEWAY_BASE_URL="http://YOUR_GATEWAY_IP:18789" \
-  justlikemaki/siribridge:latest
+  -e SIRIBRIDGE_SECRET="YOUR_CUSTOM_SECRET" \
+  yoakio/siribridge:latest
 ```
+
+### 📱 2. iOS Shortcut Configuration
+1. **Download**: [SiriBridge.shortcut](assets/SiriBridge.shortcut)
+2. **Import**: Open the file on your iPhone.
+3. **Setup Questions**:
+   - **API URL**: `http://YOUR_SERVER_IP:18888/ask`
+   - **Secret**: The `SIRIBRIDGE_SECRET` you set in Docker.
+4. **Trigger**: Say "Hey Siri, ask Jarvis".
 
 ---
 
 <a name="chinese"></a>
-## 中文
+## 中文说明
 
-**SiriBridge** 是为 [OpenClaw](https://github.com/openclaw/openclaw) 量身定制的轻量级 REST 桥接器。它让你的 iPhone Siri 能够直接与你的私有 AI 助手（Jarvis）进行原生语音对话。
+**SiriBridge** 是一个专门为 [OpenClaw](https://github.com/openclaw/openclaw) 设计的高性能轻量级 REST 桥接器。它彻底解决了原生 Siri “智商不足”的问题，通过将语音输入实时转发至你的私有 AI Agent（如 Claude 4.5、DeepSeek-V3），让你的 iPhone 拥有真正的“贾维斯”级大脑。
 
-> “嘿 Siri，问 Jarvis：今天有什么重要新闻？”
+### ✨ 核心亮点：为什么选择它？
+*   **智商降维打击**：不再听到“我在网上为你搜到了...”，而是听到逻辑严密的深度分析。
+*   **原生交互**：无需打开 App，利用系统自带的“听写”与“朗读”能力，体验丝滑。
+*   **极简部署**：一行 Docker 命令搞定，适配 VPS、Mac、树莓派、NAS。
+*   **安全可控**：支持 Header 鉴权，建议配合 Tailscale 实现全链路内网加密，隐私 0 风险。
 
-### ✨ 核心特性
-- **原生语音交互**：无需打开 App，直接通过 Siri 呼唤。
-- **极简部署**：支持 Docker 一键运行，适配 amd64/arm64 (Mac/Linux/树莓派)。
-- **安全鉴权**：支持 `X-Bridge-Secret` 头部鉴权，保护你的 Token 额度。
-- **智能熔断**：内置回复长度限制，防止 Siri 朗读“小作文”。
-- **健康自测**：自带 `/health` 接口，一秒确认网关连接状态。
+---
 
-### 🛠 1. 快速部署 (Docker 模式)
-如果你有 Docker，只需运行以下命令：
+### 🛠 一、 准备工作
+
+1.  **安装 OpenClaw**：确保你的 OpenClaw 网关正在运行。
+2.  **获取 Token**：在 OpenClaw 终端执行以下命令获取你的网关令牌：
+    ```bash
+    openclaw config get gateway.auth.token
+    ```
+3.  **确定网关地址**：记下你运行 OpenClaw 的机器 IP（建议使用 Tailscale IP，例如 `100.x.x.x`）。
+
+---
+
+### 📦 二、 部署 SiriBridge (Docker 模式)
+
+在你的服务器或本地电脑运行以下命令：
+
 ```bash
 docker run -d \
   --name siribridge \
   -p 18888:18888 \
-  -e SIRIBRIDGE_GATEWAY_TOKEN="你的_OPENCLAW_网关令牌" \
+  --restart always \
+  -e SIRIBRIDGE_GATEWAY_TOKEN="填写你的OpenClaw令牌" \
   -e SIRIBRIDGE_SECRET="自定义一个访问暗号" \
   -e GATEWAY_BASE_URL="http://你的网关IP:18789" \
-  justlikemaki/siribridge:latest
+  yoakio/siribridge:latest
 ```
 
-### 📱 2. iPhone 快捷指令配置
-1.  **下载模板**：[点击此处下载 SiriBridge.shortcut](assets/SiriBridge.shortcut)。
-2.  **配置参数**：
-    -   **URL**: `http://你的服务器IP:18888/ask`
-    -   **X-Bridge-Secret**: 填入你在 Docker 命令中设置的“访问暗号”。
-3.  **唤醒词**：默认快捷指令名为“问 Jarvis”，你可以改为任何你喜欢的词。
+**参数详解：**
+- `-p 18888:18888`：对外暴露的端口，手机快捷指令将访问这个端口。
+- `SIRIBRIDGE_GATEWAY_TOKEN`：你刚才在第一步查到的网关令牌。
+- `SIRIBRIDGE_SECRET`：可选。如果你想给接口加锁，就在这里设置一个暗号。
+- `GATEWAY_BASE_URL`：OpenClaw 网关的完整地址。
+
+---
+
+### 📱 三、 iPhone 快捷指令配置 (关键步骤)
+
+这是连接你和 AI 的最后一步：
+
+1.  **导入模板**：在 GitHub 的 `assets` 目录下找到 [SiriBridge.shortcut](assets/SiriBridge.shortcut) 并下载到手机打开。
+2.  **配置 URL**：
+    - 找到“获取 URL 内容”动作。
+    - 将 URL 改为：`http://[你的服务器IP]:18888/ask`。
+3.  **配置 Header (鉴权)**：
+    - 点击“展开”。
+    - 在“头部”添加一个字段：键为 `X-Bridge-Secret`，值为你在 Docker 命令中设置的暗号。
+4.  **配置请求体**：
+    - 确保方法为 **POST**，格式为 **JSON**。
+    - 包含一个 `text` 字段，关联到“听写的文本”。
+
+---
+
+### 🛡️ 四、 进阶：极致的安全与隐私 (Tailscale)
+
+强烈建议不要将 `18888` 端口暴露在公网。
+*   **最佳实践**：在服务器和 iPhone 上同时开启 **Tailscale**。
+*   将快捷指令中的 URL 改为服务器的 **Tailscale 内网 IP**。
+*   这样即使在 5G 户外，你的数据也通过加密隧道传输，且公网黑客完全无法发现你的接口。
+
+---
+
+### ❓ 五、 常见问题排查 (Troubleshooting)
+
+*   **Siri 报错“无法连接”**：检查服务器防火墙是否放行了 `18888` 端口；检查 Tailscale 是否处于 Connected 状态。
+*   **gateway_connected 为 false**：说明 SiriBridge 连不上 OpenClaw。请确保 Docker 启动命令中的 `GATEWAY_BASE_URL` 使用的是宿主机的内网 IP，而非 `127.0.0.1`。
+*   **Siri 朗读太长**：SiriBridge 默认开启了 1500 字熔断保护，防止 Siri 变成“碎碎念”。
 
 ---
 
