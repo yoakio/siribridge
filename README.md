@@ -36,12 +36,10 @@ docker run -d \
 ```
 
 ### 📱 2. iOS Shortcut Configuration
-1. **Download**: [SiriBridge.shortcut](assets/SiriBridge.shortcut)
-2. **Import**: Open the file on your iPhone.
-3. **Setup Questions**:
-   - **API URL**: `http://YOUR_SERVER_IP:18888/ask`
-   - **Secret**: The `SIRIBRIDGE_SECRET` you set in Docker.
-4. **Trigger**: Say "Hey Siri, ask Jarvis".
+We provide two versions of shortcuts (functionally identical, only the trigger phrase differs):
+
+1. **Chinese (Recommended)**: [问贾维斯.shortcut](assets/问贾维斯.shortcut) — Trigger: "Hey Siri, **问贾维斯**".
+2. **English**: [Ask_Jarvis.shortcut](assets/Ask_Jarvis.shortcut) — Trigger: "Hey Siri, **Ask Jarvis**".
 
 ---
 
@@ -84,28 +82,16 @@ docker run -d \
   yoakio/siribridge:latest
 ```
 
-**参数详解：**
-- `-p 18888:18888`：对外暴露的端口，手机快捷指令将访问这个端口。
-- `SIRIBRIDGE_GATEWAY_TOKEN`：你刚才在第一步查到的网关令牌。
-- `SIRIBRIDGE_SECRET`：可选。如果你想给接口加锁，就在这里设置一个暗号。
-- `GATEWAY_BASE_URL`：OpenClaw 网关的完整地址。
-
 ---
 
 ### 📱 三、 iPhone 快捷指令配置 (关键步骤)
 
-这是连接你和 AI 的最后一步：
+连接你和 AI 的最后一步：
 
-1.  **导入模板**：在 GitHub 的 `assets` 目录下找到 [SiriBridge.shortcut](assets/SiriBridge.shortcut) 并下载到手机打开。
-2.  **配置 URL**：
-    - 找到“获取 URL 内容”动作。
-    - 将 URL 改为：`http://[你的服务器IP]:18888/ask`。
-3.  **配置 Header (鉴权)**：
-    - 点击“展开”。
-    - 在“头部”添加一个字段：键为 `X-Bridge-Secret`，值为你在 Docker 命令中设置的暗号。
-4.  **配置请求体**：
-    - 确保方法为 **POST**，格式为 **JSON**。
-    - 包含一个 `text` 字段，关联到“听写的文本”。
+1.  **导入模板**：下载 [问贾维斯.shortcut](assets/问贾维斯.shortcut) 或 [Ask_Jarvis.shortcut](assets/Ask_Jarvis.shortcut) 并导入。
+2.  **配置 URL**：找到“获取 URL 内容”动作，改为：`http://[你的服务器IP]:18888/ask`。
+3.  **配置鉴权**：在“头部”添加 `X-Bridge-Secret`，值为你在 Docker 命令中设置的暗号。
+4.  **配置请求体**：确保方法为 **POST**，格式为 **JSON**，包含 `text` 字段并关联到“听写的文本”。
 
 ---
 
