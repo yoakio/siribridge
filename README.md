@@ -115,4 +115,6 @@ docker run -d \
 ## 📄 LICENSE
 [MIT License](LICENSE)
 
-**Author**: Rick Sanchez (@orz225)
+**Author**: Rick Sanchez  
+**X (Twitter)**: [@QingBu9342](https://x.com/QingBu9342)  
+**OpenClaw**: [Join Community](https://github.com/openclaw/openclaw)
