@@ -58,11 +58,26 @@ docker run -d \
     *   **英文版**：[Ask_Jarvis.shortcut](assets/Ask_Jarvis.shortcut) —— 唤醒词：“Hey Siri, **Ask Jarvis**”。
 2.  **配置 URL**：找到“获取 URL 内容”动作，改为：`http://[你的服务器IP]:18888/ask`。
 3.  **配置鉴权**：在“头部”添加 `X-Bridge-Secret`，值为你在 Docker 命令中设置的暗号。
-4.  **配置请求体**：确保方法为 **POST**，格式为 **JSON**，包含 `text` 字段并关联到“听写的文本”。
 
 ---
 
-### 🛡️ 四、 进阶：极致的安全与隐私 (Tailscale)
+### ⚡️ 四、 进阶：如何更优雅地召唤 Jarvis？
+
+除了喊“嘿 Siri”，你还可以用以下几种更硬核的方式触发：
+
+*   **敲击手机背面 (推荐)**：
+    -   进入 iPhone `设置` -> `辅助功能` -> `触控` -> `轻点背面`。
+    -   选择 `轻点两下` 或 `轻点三下`，勾选 **“问贾维斯”**。
+    -   *现在，只需帅气地敲两下手机，Jarvis 就会立刻听令。*
+*   **Apple Watch 随身调遣**：
+    -   在 Apple Watch 上打开“快捷指令”App 即可直接点击调用。
+    -   建议将指令添加到 **表盘复杂功能**，实现抬手即问。
+*   **Action Button (iPhone 15 Pro 及以上)**：
+    -   在 `设置` -> `操作按钮` 中绑定 **“问贾维斯”**，实现实体按键一键召唤。
+
+---
+
+### 🛡️ 五、 进阶：极致的安全与隐私 (Tailscale)
 
 强烈建议不要将 `18888` 端口暴露在公网。
 *   **最佳实践**：在服务器和 iPhone 上同时开启 **Tailscale**。
@@ -71,7 +86,7 @@ docker run -d \
 
 ---
 
-### ❓ 五、 常见问题排查 (Troubleshooting)
+### ❓ 六、 常见问题排查 (Troubleshooting)
 
 *   **Siri 报错“无法连接”**：检查服务器防火墙是否放行了 `18888` 端口；检查 Tailscale 是否处于 Connected 状态。
 *   **gateway_connected 为 false**：说明 SiriBridge 连不上 OpenClaw。请确保 Docker 启动命令中的 `GATEWAY_BASE_URL` 使用的是宿主机的内网 IP，而非 `127.0.0.1`。
