@@ -1,5 +1,9 @@
 # SiriBridge 🚀：把你的 Siri “换脑”成真正的 Jarvis
 
+<p align="center">
+  <img src="assets/logo.svg" width="300" alt="SiriBridge Logo">
+</p>
+
 [中文说明](#chinese) | [English](#english)
 
 ---
