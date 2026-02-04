@@ -1,45 +1,6 @@
 # SiriBridge 🚀：把你的 Siri “换脑”成真正的 Jarvis
 
-[English](#english) | [中文说明](#chinese)
-
----
-
-<a name="english"></a>
-## English
-
-**SiriBridge** is a high-performance, lightweight REST bridge designed to connect Apple Siri with [OpenClaw](https://github.com/openclaw/openclaw). It bypasses the limitations of native Siri by routing voice inputs to your private AI agents (powered by Claude 4.5, DeepSeek, etc.) and reading back the intelligent responses natively on your iPhone.
-
-### 🧠 Why SiriBridge?
-Native Siri is often limited to simple tasks or web searches. SiriBridge gives it a "brain transplant":
-- **Complex Reasoning**: Ask complicated logic or coding questions.
-- **Private Knowledge**: Connect to your own local data via OpenClaw.
-- **Extreme Speed**: Millisecond-level processing and response.
-- **Privacy First**: Your data stays in your control.
-
-### 🛠 System Architecture
-1. **Frontend**: iOS Shortcuts handles "Speech-to-Text" and "Text-to-Speech".
-2. **Bridge**: SiriBridge (FastAPI) converts Shortcut JSON payloads into OpenClaw compatible API calls.
-3. **Backend**: OpenClaw Gateway manages model routing and agent logic.
-
-### 🚀 1. Quick Start (Docker)
-The easiest way to deploy is using our multi-arch Docker image (supports amd64/arm64):
-
-```bash
-docker run -d \
-  --name siribridge \
-  -p 18888:18888 \
-  --restart always \
-  -e SIRIBRIDGE_GATEWAY_TOKEN="YOUR_OPENCLAW_TOKEN" \
-  -e GATEWAY_BASE_URL="http://YOUR_GATEWAY_IP:18789" \
-  -e SIRIBRIDGE_SECRET="YOUR_CUSTOM_SECRET" \
-  yoakio/siribridge:latest
-```
-
-### 📱 2. iOS Shortcut Configuration
-We provide two versions of shortcuts (functionally identical, only the trigger phrase differs):
-
-1. **Chinese (Recommended)**: [问贾维斯.shortcut](assets/问贾维斯.shortcut) — Trigger: "Hey Siri, **问贾维斯**".
-2. **English**: [Ask_Jarvis.shortcut](assets/Ask_Jarvis.shortcut) — Trigger: "Hey Siri, **Ask Jarvis**".
+[中文说明](#chinese) | [English](#english)
 
 ---
 
@@ -88,7 +49,9 @@ docker run -d \
 
 连接你和 AI 的最后一步：
 
-1.  **导入模板**：下载 [问贾维斯.shortcut](assets/问贾维斯.shortcut) 或 [Ask_Jarvis.shortcut](assets/Ask_Jarvis.shortcut) 并导入。
+1.  **导入模板**：我们为你准备了两个版本的快捷指令（功能一致，仅唤醒词不同）：
+    *   **中文版 (推荐)**：[问贾维斯.shortcut](assets/问贾维斯.shortcut) —— 唤醒词：“嘿 Siri，**问贾维斯**”。
+    *   **英文版**：[Ask_Jarvis.shortcut](assets/Ask_Jarvis.shortcut) —— 唤醒词：“Hey Siri, **Ask Jarvis**”。
 2.  **配置 URL**：找到“获取 URL 内容”动作，改为：`http://[你的服务器IP]:18888/ask`。
 3.  **配置鉴权**：在“头部”添加 `X-Bridge-Secret`，值为你在 Docker 命令中设置的暗号。
 4.  **配置请求体**：确保方法为 **POST**，格式为 **JSON**，包含 `text` 字段并关联到“听写的文本”。
@@ -109,6 +72,37 @@ docker run -d \
 *   **Siri 报错“无法连接”**：检查服务器防火墙是否放行了 `18888` 端口；检查 Tailscale 是否处于 Connected 状态。
 *   **gateway_connected 为 false**：说明 SiriBridge 连不上 OpenClaw。请确保 Docker 启动命令中的 `GATEWAY_BASE_URL` 使用的是宿主机的内网 IP，而非 `127.0.0.1`。
 *   **Siri 朗读太长**：SiriBridge 默认开启了 1500 字熔断保护，防止 Siri 变成“碎碎念”。
+
+---
+
+<a name="english"></a>
+## English
+
+**SiriBridge** is a high-performance, lightweight REST bridge designed to connect Apple Siri with [OpenClaw](https://github.com/openclaw/openclaw). It bypasses the limitations of native Siri by routing voice inputs to your private AI agents (powered by Claude 4.5, DeepSeek, etc.) and reading back the intelligent responses natively on your iPhone.
+
+### 🧠 Why SiriBridge?
+Native Siri is often limited to simple tasks or web searches. SiriBridge gives it a "brain transplant":
+- **Complex Reasoning**: Ask complicated logic or coding questions.
+- **Private Knowledge**: Connect to your own local data via OpenClaw.
+- **Extreme Speed**: Millisecond-level processing and response.
+- **Privacy First**: Your data stays in your control.
+
+### 🚀 Quick Start (Docker)
+```bash
+docker run -d \
+  --name siribridge \
+  -p 18888:18888 \
+  --restart always \
+  -e SIRIBRIDGE_GATEWAY_TOKEN="YOUR_OPENCLAW_TOKEN" \
+  -e GATEWAY_BASE_URL="http://YOUR_GATEWAY_IP:18789" \
+  -e SIRIBRIDGE_SECRET="YOUR_CUSTOM_SECRET" \
+  yoakio/siribridge:latest
+```
+
+### 📱 iOS Shortcut Configuration
+1. **Download**: [问贾维斯.shortcut](assets/问贾维斯.shortcut) or [Ask_Jarvis.shortcut](assets/Ask_Jarvis.shortcut).
+2. **Setup**: Point the API URL to `http://YOUR_SERVER_IP:18888/ask`.
+3. **Auth**: Add `X-Bridge-Secret` header if configured.
 
 ---
 
