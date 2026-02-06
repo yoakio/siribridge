@@ -136,4 +136,4 @@ docker run -d \
 
 **Author**: Rick Sanchez  
 **X (Twitter)**: [@QingBu9342](https://x.com/QingBu9342)  
-**OpenClaw**: [Join Community](https://github.com/openclaw/openclaw)http://100.69.248.10:18888/health
+**OpenClaw**: [Join Community](https://github.com/openclaw/openclaw)
