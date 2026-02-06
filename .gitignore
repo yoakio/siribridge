@@ -1,9 +1,3 @@
-.env
-*.log
-*.err
-*.out
-__pycache__/
-.DS_Store
-ai.openclaw.siribridge.plist
-setup.sh
-assets/*.shortcut.bak
+*
+!README.md
+!.gitignore
