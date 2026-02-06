@@ -3,7 +3,6 @@
 <p align="center">
   <img src="assets/logo.svg" width="300" alt="SiriBridge Logo">
 </p>
-
 [中文说明](#chinese) | [English](#english)
 
 ---
@@ -32,20 +31,27 @@
 
 ---
 
-### 📦 二、 部署 SiriBridge (Docker 模式)
+### 📦 二、 部署架构 (Current Architecture)
 
-在你的服务器或本地电脑运行以下命令：
+目前项目采用 **Docker 隔离 + macOS 原生隧道** 的混血架构运行：
 
-```bash
-docker run -d \
-  --name siribridge \
-  -p 18888:18888 \
-  --restart always \
-  -e SIRIBRIDGE_GATEWAY_TOKEN="填写你的OpenClaw令牌" \
-  -e SIRIBRIDGE_SECRET="自定义一个访问暗号" \
-  -e GATEWAY_BASE_URL="http://你的网关IP:18789" \
-  yoakio/siribridge:latest
-```
+1.  **逻辑层 (Docker)**：
+    *   **容器名**：`siribridge`
+    *   **运行命令**：`docker compose up -d`
+    *   **端口映射**：`18888:18888`
+    *   **配置文件**：`.env` (包含网关 Token 和访问密钥)
+2.  **传输层 (Cloudflare Tunnel)**：
+    *   **进程**：macOS 原生 `cloudflared` 进程。
+    *   **隧道名**：`siribridge`
+    *   **公网域名**：`https://siri.961213.xyz`
+    *   **转发逻辑**：外网 HTTPS -> 本地 18888 端口。
+
+---
+
+### ⚠️ 维护笔记 (Maintenance Notes)
+
+*   **避坑指南**：项目历史上曾尝试过 macOS 原生 `LaunchAgent` 部署（`ai.openclaw.siribridge.plist`）。**请注意**：目前已全面转向 Docker，若需修改代码或重启服务，请仅操作 Docker 容器。严禁同时启动原生进程，否则会导致 18888 端口冲突。
+*   **清理指令**：若发现端口被占用，请执行 `launchctl unload ~/Library/LaunchAgents/ai.openclaw.siribridge.plist`。
 
 ---
 
@@ -130,4 +136,4 @@ docker run -d \
 
 **Author**: Rick Sanchez  
 **X (Twitter)**: [@QingBu9342](https://x.com/QingBu9342)  
-**OpenClaw**: [Join Community](https://github.com/openclaw/openclaw)
+**OpenClaw**: [Join Community](https://github.com/openclaw/openclaw)http://100.69.248.10:18888/health

@@ -2,8 +2,9 @@ services:
   siribridge:
     build: .
     container_name: siribridge
-    network_mode: host  # 使用 host 模式以便直接通过 Tailscale IP 访问网关
+    ports:
+      - "18888:18888"
     restart: always
     env_file: .env
     volumes:
-      - ./siri_bridge.log:/app/siri_bridge.log
+      - ./siri_bridge.log:/app/siri_bridge.log:rw
